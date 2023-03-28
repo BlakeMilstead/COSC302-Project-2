@@ -10,24 +10,11 @@
 #include <iostream>
 #include <map>
 #include <set>
+#include <queue>
 #include <list>
 #include <climits>
 using namespace std;
 // Main Execution
-int minDistance(set<int> visited, int distance[]) { // finds min distance in the visited set
-    int min = INT_MAX;
-    int minIndex;
-
-    set<int>::iterator it;
-    for (it = visited.begin(); it != visited.end(); ++it) {
-        if (distance[*it] < min) {
-            min = distance[*it];
-            minIndex = *it;
-        }
-    }
-
-    return minIndex;
-}
 
 int main(int argc, char *argv[]) {
     int num_of_tiles, tile_weight, map_rows, map_cols;
@@ -57,49 +44,70 @@ int main(int argc, char *argv[]) {
     int start_index = (start_row * map_cols) + start_col;
     int end_index   = (end_row * map_cols) + end_col;
 
-    //Start of Dijkstra's algorithm
-    set<int> visited; //set of indices that have been visited by the algorithm
-    int *distance = new int[map_size]; // distances from source for each index
-    int *previous = new int[map_size]; // contains each index's previous 'hop' from source
+    //TODO: run dijkstras algorithm
+    priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>> > pq; 
+    int *distance = new int[map_size];
+    int *previous = new int[map_size];
 
     for (int i=0; i<map_size; i++) {
-        visited.insert(i);
         distance[i] = INT_MAX;
         previous[i] = -1;
     }
 
-    //since distances are measured from "leaving" a tile, the start tile must contain it's weight
     distance[start_index] = tiles.find(tile_map[start_index])->second;
+	pq.push(make_pair(distance[start_index], start_index));
     int current;
-
-    while (!visited.empty()) {
-        current = minDistance(visited, distance);
+    while (!pq.empty()) {
+        current = pq.top().second;
         if (current == end_index) break;
-        visited.erase(current);
+        pq.pop();
 
-        set<int>::iterator it;
-        //This loop will update all adjacent tiles with new distances if they are shorter
-        for(it = visited.begin(); it!=visited.end(); ++it) {
-            if (*it == current + map_cols || // checks for adjacency
-                *it == current - map_cols ||
-                (*it == current + 1 && *it / map_cols == current / map_cols) ||
-                (*it == current - 1 && *it / map_cols == current / map_cols)) {
-                    int alt = distance[current] + tiles.find(tile_map[*it])->second;
 
-                    if (alt < distance[*it]) {
-                        distance[*it] = alt;
-                        previous[*it] = current;
-                    }
-                }
+		if (current / map_cols != map_rows-1) { //bottom
+			int alt = current + map_cols;
+			int weight = distance[current] + tiles.find(tile_map[alt])->second;
+            if (weight < distance[alt]) {
+				distance[alt] = weight;
+                previous[alt] = current;
+				pq.push(make_pair(distance[alt], alt));
+            }
+		}
+
+		if (current / map_cols != 0) { //Top
+            int alt = current - map_cols;
+            int weight = distance[current] + tiles.find(tile_map[alt])->second;
+            if (weight < distance[alt]) {
+                distance[alt] = weight;
+                previous[alt] = current;
+                pq.push(make_pair(distance[alt], alt));
+            }
+        }
+
+		if (current / map_cols == (current+1) / map_cols && current != map_size-1) { //Right
+            int alt = current + 1;
+            int weight = distance[current] + tiles.find(tile_map[alt])->second;
+            if (weight < distance[alt]) {
+                distance[alt] = weight;
+                previous[alt] = current;
+                pq.push(make_pair(distance[alt], alt));
+            }
+        }
+
+		if (current / map_cols == (current-1) / map_cols && current != 0) { //Left
+            int alt = current - 1;
+            int weight = distance[current] + tiles.find(tile_map[alt])->second;
+            if (weight < distance[alt]) {
+                distance[alt] = weight;
+                previous[alt] = current;
+                pq.push(make_pair(distance[alt], alt));
+            }
         }
     }
-
-    list<int> sequence; // list of moves from source to target
-    sequence.push_front(end_index); // had to be added here because of how I did cost calculation
+    list<int> sequence;
+    sequence.push_front(end_index);
     int cost = 0;
     current = previous[end_index]; // this might break it
     if (previous[current] != -1 || current == start_index) {
-        // this loop traverses the "previous" array to find the path from source to target
         while (current != -1) {  
             cost += tiles.find(tile_map[current])->second;
             sequence.push_front(current);
