@@ -59,8 +59,8 @@ int main(int argc, char *argv[]) {
 
     //Start of Dijkstra's algorithm
     set<int> visited; //set of indices that have been visited by the algorithm
-    int *distance = new int[map_size]; // distances from source for each index
-    int *previous = new int[map_size]; // contains each index's previous 'hop' from source
+    int *distance = new int[1]; // distances from source for each index
+    int *previous = new int[1]; // contains each index's previous 'hop' from source
 
     for (int i=0; i<map_size; i++) {
         visited.insert(i);
