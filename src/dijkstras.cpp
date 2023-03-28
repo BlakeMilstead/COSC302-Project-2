@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
     int start_index = (start_row * map_cols) + start_col;
     int end_index   = (end_row * map_cols) + end_col;
 
-    //TODO: run dijkstras algorithm
+    //run dijkstras algorithm
     priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>> > pq; 
     int *distance = new int[map_size];
     int *previous = new int[map_size];
