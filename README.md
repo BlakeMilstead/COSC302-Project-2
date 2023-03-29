@@ -11,3 +11,5 @@ Project 4 Dijkstras BenchMark
 | 1000          | 1.10554s      | 12,196,096     |
 |---------------|---------------|----------------|
 
+To run generate_map: type python3 generate_map.py
+benchmarck.sh exe made with chmod +x benchMarck.sh and ran by typing ./benchMarck.sh

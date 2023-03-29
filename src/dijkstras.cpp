@@ -6,6 +6,8 @@
  * Dijkstra's algorithm to find the 
  * shortest path between a start and
  * target tile, and printing the cost
+ * Inspired by implementations from
+ * geeksforgeeks.com
 *************************************/
 #include <iostream>
 #include <map>
