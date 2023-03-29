@@ -44,7 +44,10 @@ int main(int argc, char *argv[]) {
     int start_index = (start_row * map_cols) + start_col;
     int end_index   = (end_row * map_cols) + end_col;
 
-    //run dijkstras algorithm
+    //Start of dijkstras algorithm
+
+    //This priority queue allows multiple insertions of the same index, but will only output
+    //the insertion with minimum weight, this is useful in finding alt. paths to tiles
     priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>> > pq; 
     int *distance = new int[map_size];
     int *previous = new int[map_size];
@@ -54,15 +57,18 @@ int main(int argc, char *argv[]) {
         previous[i] = -1;
     }
 
+    //start tile is initialized in distance and pushed into the pq
     distance[start_index] = tiles.find(tile_map[start_index])->second;
 	pq.push(make_pair(distance[start_index], start_index));
-    int current;
+
+    int current; // index of current tile being looked at by the loop
     while (!pq.empty()) {
-        current = pq.top().second;
-        if (current == end_index) break;
+        current = pq.top().second; //value in pq with smallest distance
+        if (current == end_index) break; // we've found the end
         pq.pop();
 
-
+        // These next if statements check the adjacent tiles for a quicker path
+        // to the adjacent nodes through the current node
 		if (current / map_cols != map_rows-1) { //bottom
 			int alt = current + map_cols;
 			int weight = distance[current] + tiles.find(tile_map[alt])->second;
@@ -103,12 +109,13 @@ int main(int argc, char *argv[]) {
             }
         }
     }
-    list<int> sequence;
+    list<int> sequence; // final list containing path from start to end
     sequence.push_front(end_index);
-    int cost = 0;
-    current = previous[end_index]; // this might break it
+    int cost = 0; // added weights of each tile
+    current = previous[end_index];
     if (previous[current] != -1 || current == start_index) {
-        while (current != -1) {  
+        while (current != -1) {
+            //adds up cost, adds to list, goes to tile stored in previous[current] and repeats
             cost += tiles.find(tile_map[current])->second;
             sequence.push_front(current);
             current = previous[current];
