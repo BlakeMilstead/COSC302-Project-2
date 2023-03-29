@@ -1,0 +1,6 @@
+Contributions: Wrote the rough draft of dijkstras.cpp to solve test cases, later optimized with Blakes help to make it run much faster.
+1. We just represented the map using an array, since each tile only has a max of four neighbors we found it easier to just check each neighbor
+	rather than storing their edges.
+2. O(E*log(V)) E=edges V=Vertexes, this is because our priority queue could run on every edge at a time of log(v) insertion and deletion for each edge.
+3. The time scaled much better than we initially expected, getting to around 1 second for n-1000;
+	 the memory scaled up to about 12 mb for n=1000 which we feel is more than acceptable.
