@@ -1,0 +1,16 @@
+Blake Milstead - Worked with Turner Heath
+COSC 302
+Professor Emrich
+3-28-2023
+
+Contributions:
+I created the generate_map.py program as well as the shell script that finds the run times of Dijkstras for each generated map.
+I also made the table in README.md with the average times and memory. I also helped optimize the algorithm making it much faster and 
+use less and memory. This includes the implementation of the priority_queue.
+
+1. We represented the map as a 1D array. This is because each tile can only have an edge with its four adjacent neighbors. This made
+    searching for adjacent edges very easy instead of implementing a adjacency matrix or list.
+2. The time complexity of our algorithm is O(E*log(V)). This is because we use a priority_queue to find our mimimum distances. Insertion and 
+    deletion in a priority_queue is log(V) if containing every vertex and we do this for every edge, thus O(E*log(V)).
+3. Our time scaled very well to N with our implementation reaching a max of around 1 second with N = 1000. Our memory scaled to about 12 MB for
+    N = 1000 which feels acceptable.
